@@ -1,5 +1,7 @@
-import axios from "axios"
+import axios, {AxiosRequestConfig, AxiosResponse} from "axios"
 import {WeatherURLQueryParams} from "../types/api"
+import {transformGetCityWeatherResponse} from "./get-city-weather-response.tranform";
+import {WeatherUnitsType} from "../types/enum";
 
 const apiKey = process.env["REACT_APP_OPEN_WEATHER_MAP_API_KEY"]
 
@@ -19,8 +21,12 @@ const generateURLQuery = (params: WeatherURLQueryParams): string => {
 }
 
 export const weatherApi = {
-  getWeatherByCity (city: string): Promise<void> {
-    const urlQuery = generateURLQuery({ q: city })
-    return httpClient.get(`weather?${urlQuery}`)
+  getWeatherByCity (city: string): Promise<AxiosResponse> {
+    const config: AxiosRequestConfig = {
+      transformResponse: transformGetCityWeatherResponse
+    }
+    const urlQuery = generateURLQuery({ q: city, units: WeatherUnitsType.Metric })
+
+    return httpClient.get(`weather?${urlQuery}`, config)
   }
 }

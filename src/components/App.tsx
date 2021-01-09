@@ -1,7 +1,10 @@
-import React, {useEffect} from 'react';
-import {weatherApi} from "../api/weather.api";
-import {Container, TextField} from "@material-ui/core";
+import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
+import {Button, Container, TextField} from "@material-ui/core";
 import styled from 'styled-components'
+import {useDispatch, useSelector} from "react-redux";
+import {addCity, loadCitiesWeatherInfo} from "../store/cities";
+import Weather from "./weather/Weather";
+import {getCities, getWeatherInfo} from "../store/cities/selectors";
 
 const Wrapper = styled.div`
   margin: 40px;
@@ -14,15 +17,35 @@ const Input = styled(TextField)`
 `
 
 const App: React.FC = () => {
+  const [cityName, setCityName] = useState('')
+  const dispatch = useDispatch()
+  const cities = useSelector(getCities)
+  const weatherInfo = useSelector(getWeatherInfo)
+
+  const handleCityNameUpdate = (event: ChangeEvent) => setCityName((event.target as HTMLInputElement).value)
+  const saveCity = () => {
+    dispatch(addCity(cityName))
+    setCityName('')
+  }
+
+  const loadWeatherInfo = useCallback(() => dispatch(loadCitiesWeatherInfo(cities)), [dispatch, cities])
 
   useEffect(() => {
-    weatherApi.getWeatherByCity('Minsk')
-  }, [])
+    loadWeatherInfo()
+  }, [loadWeatherInfo])
+
+  useEffect(() => {
+    console.log(weatherInfo)
+  }, [weatherInfo])
 
   return (
       <Container maxWidth='xl'>
+        <Weather/>
         <Wrapper>
-          <Input id="outlined-basic" label="City name" variant="outlined" color="primary" />
+          <Input label="City name" variant="outlined" color="primary" value={cityName} onChange={handleCityNameUpdate}/>
+          <Button variant="contained" color="primary" onClick={saveCity}>
+            Add
+          </Button>
         </Wrapper>
       </Container>
   )
