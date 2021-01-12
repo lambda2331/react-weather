@@ -44,8 +44,7 @@ const citiesSlice = createSlice({
     }
   },
   extraReducers: {
-    // @ts-ignore
-    [loadCitiesWeatherInfo.fulfilled] (state, action) {
+    [loadCitiesWeatherInfo.fulfilled as any] (state, action) {
       state.weather = { ...state.weather, ...action.payload }
       return
     }

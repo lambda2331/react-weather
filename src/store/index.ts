@@ -15,7 +15,7 @@ import {
 import storage from 'redux-persist/lib/storage'
 import {PersistConfig} from "redux-persist/es/types";
 import {citiesTransform} from "./cities/persist-transform";
-import autoMergeLevel2 from "redux-persist/es/stateReconciler/autoMergeLevel2";
+import {initWatchers} from "./watcher";
 
 const rootReducer = combineReducers({
   cities
@@ -25,8 +25,7 @@ const persistConfig: PersistConfig<RootState> = {
   key: 'store',
   whitelist: ['cities'],
   storage,
-  transforms: [citiesTransform],
-  stateReconciler: autoMergeLevel2
+  transforms: [citiesTransform]
 }
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
@@ -42,6 +41,8 @@ const store = configureStore({
 })
 
 const persistor = persistStore(store)
+
+initWatchers(store)
 
 export type RootState = ReturnType<typeof rootReducer>
 export type AppDispatch = typeof store.dispatch

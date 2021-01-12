@@ -1,53 +1,33 @@
-import React, {ChangeEvent, useCallback, useEffect, useState} from 'react';
-import {Button, Container, TextField} from "@material-ui/core";
-import styled from 'styled-components'
-import {useDispatch, useSelector} from "react-redux";
-import {addCity, loadCitiesWeatherInfo} from "../store/cities";
-import Weather from "./weather/Weather";
-import {getCities, getWeatherInfo} from "../store/cities/selectors";
+import React from 'react';
+import {Container} from "@material-ui/core";
+import AddCity from "./add-city/AddCity";
+import styled from 'styled-components';
+import SelectCity from './select-city/SelectCity';
 
-const Wrapper = styled.div`
-  margin: 40px;
-  display: flex;
-  justify-content: center;
+const StyledContainer = styled(Container)`
+  background: linear-gradient(120deg, rgba(50, 150, 100, 0.2), rgba(0, 0, 100, 0));
+  height: 100vh;
 `
 
-const Input = styled(TextField)`
-  width: 20rem;
+const ButtonsContainer = styled.div`
+  position: absolute;
+  right: 40px;
+  top: 20px;
+  display: flex;
+  
+  > div:first-child {
+    margin-right: 20px;
+  }
 `
 
 const App: React.FC = () => {
-  const [cityName, setCityName] = useState('')
-  const dispatch = useDispatch()
-  const cities = useSelector(getCities)
-  const weatherInfo = useSelector(getWeatherInfo)
-
-  const handleCityNameUpdate = (event: ChangeEvent) => setCityName((event.target as HTMLInputElement).value)
-  const saveCity = () => {
-    dispatch(addCity(cityName))
-    setCityName('')
-  }
-
-  const loadWeatherInfo = useCallback(() => dispatch(loadCitiesWeatherInfo(cities)), [dispatch, cities])
-
-  useEffect(() => {
-    loadWeatherInfo()
-  }, [loadWeatherInfo])
-
-  useEffect(() => {
-    console.log(weatherInfo)
-  }, [weatherInfo])
-
   return (
-      <Container maxWidth='xl'>
-        <Weather/>
-        <Wrapper>
-          <Input label="City name" variant="outlined" color="primary" value={cityName} onChange={handleCityNameUpdate}/>
-          <Button variant="contained" color="primary" onClick={saveCity}>
-            Add
-          </Button>
-        </Wrapper>
-      </Container>
+      <StyledContainer maxWidth='xl'>
+        <ButtonsContainer>
+          <SelectCity />
+          <AddCity />
+        </ButtonsContainer>
+      </StyledContainer>
   )
 }
 export default App
