@@ -1,4 +1,4 @@
-import { WeatherUnitsType } from "../enum"
+import { WeatherUnitsType } from '../enum'
 
 export interface WeatherURLQueryParams {
   q?: string,

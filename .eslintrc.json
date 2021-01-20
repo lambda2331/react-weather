@@ -1,0 +1,88 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": [
+        "plugin:react/recommended",
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "airbnb"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 6,
+        "sourceType": "module",
+        "project": "tsconfig.json",
+        "tsconfigRootDir": "."
+    },
+    "plugins": [
+        "react",
+        "@typescript-eslint"
+    ],
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "extensions": [
+                    ".js",
+                    ".jsx",
+                    ".d.ts",
+                    ".ts",
+                    ".tsx"
+                ]
+            }
+        },
+        "import/extensions": [
+            ".d.ts",
+            ".ts",
+            ".tsx"
+        ],
+        "import/parsers": {
+            "@typescript-eslint/parser": [
+                ".d.ts",
+                ".ts",
+                ".tsx"
+            ]
+        },
+        "import/core-modules": [],
+        "import/ignore": [
+            "node_modules"
+        ]
+    },
+    "rules": {
+        "semi": [
+            "error", "never"
+        ],
+        "no-unused-expressions": "warn",
+        "no-use-before-define": "off",
+        "import/extensions": [
+            "error",
+            "ignorePackages",
+            {
+                "d.ts": "never",
+                "ts": "never",
+                "tsx": "never"
+            }
+        ],
+        "react/jsx-filename-extension": [2, { "extensions": [".ts", ".tsx"] }],
+        "comma-dangle": ["error", "never"],
+        "import/prefer-default-export": "off",
+        "no-console": "off",
+        "no-unused-vars": "off",
+        "no-shadow": "off",
+        "max-len": ["error", { "code": 140 }],
+        "space-before-function-paren": ["warn", { "anonymous": "never", "named": "always" }],
+        "import/no-cycle": "warn",
+        "no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsFor": ["state"] }],
+        "@typescript-eslint/ban-ts-comment": ["error", {
+            "ts-ignore": "allow-with-description",
+            "minimumDescriptionLength": 10
+        }],
+        "@typescript-eslint/explicit-module-boundary-types": "off"
+    }
+}

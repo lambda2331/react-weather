@@ -1,57 +1,77 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {Cities, WeatherInfo} from "../../types/common";
-import {weatherApi} from "../../api/weather.api";
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import {
+  Cities,
+  CitiesWeather,
+  WeatherInfo
+} from '../../types/common'
+import { weatherApi } from '../../api/weather.api'
 
 export type CitiesStore = {
   cities: Cities,
-  weather: { [key: string]: WeatherInfo }
+  weather: CitiesWeather,
+  selectedCity: string | null
 }
 
 const initialState: CitiesStore = {
   cities: [],
-  weather: {}
+  weather: [],
+  selectedCity: null
 }
 
-
-const loadCitiesWeatherInfo = createAsyncThunk<Promise<void>, string[]>('cities/loadCityWeatherInfo',
-    async (cities, thunkAPI) => {
-      const promises = cities.map(city => weatherApi.getWeatherByCity(city))
+const loadCitiesWeatherInfo = createAsyncThunk<Promise<WeatherInfo[] | Error>, string[]>('cities/loadCityWeatherInfo',
+  async (cities, thunkAPI) => {
+    try {
+      const promises = cities.map((city) => weatherApi.getWeatherByCity(city))
       const results = await Promise.all(promises)
 
-      return results.map(result => result.data)
-          .reduce((obj, data) => {
-            obj[data.name] = data
-            return obj
-          }, {})
-    })
+      return results
+    } catch (e) {
+      return thunkAPI.rejectWithValue((e as Error).message)
+    }
+  })
 
 const citiesSlice = createSlice({
   name: 'cities',
   initialState,
   reducers: {
-    addCity (state, action) {
+    addCity (state, action: PayloadAction<string>) {
       state.cities = Array.from(new Set([...state.cities, action.payload]))
-      return state
     },
-    removeCity (state, action) {
-      state.cities = state.cities.filter(city => city.toLocaleLowerCase() !== action.payload.toLocaleLowerCase())
+    removeCity (state, action: PayloadAction<string>) {
+      state.cities = state.cities.filter((city) => city.toLocaleLowerCase() !== action.payload.toLocaleLowerCase())
+      const needToRemoveWeather = state.weather.some((item) => item.name === action.payload)
 
-      if (action.payload in state.weather) {
-        delete state.weather[action.payload]
+      if (needToRemoveWeather) {
+        state.weather = state.weather.filter((item) => item.name !== action.payload)
       }
-
-      return state
+    },
+    selectCity (state, action: PayloadAction<string>) {
+      console.log(action.payload)
+      state.selectedCity = action.payload
     }
   },
   extraReducers: {
-    [loadCitiesWeatherInfo.fulfilled as any] (state, action) {
-      state.weather = { ...state.weather, ...action.payload }
-      return
+    // @ts-ignore logic to use extra reducers
+    [loadCitiesWeatherInfo.fulfilled] (state, action: PayloadAction<WeatherInfo[]>) {
+      state.weather = [...state.weather, ...action.payload]
+    },
+    // @ts-ignore logic to use extra reducers
+    [loadCitiesWeatherInfo.rejected] (state, action: PayloadAction<string>) {
+      state.cities = state.cities.filter((city) => city.toLocaleLowerCase() !== action.payload.toLocaleLowerCase())
     }
   }
 })
 
-const { addCity, removeCity } = citiesSlice.actions
+const {
+  addCity,
+  removeCity,
+  selectCity
+} = citiesSlice.actions
 
 export default citiesSlice.reducer
-export { addCity, removeCity, loadCitiesWeatherInfo }
+export {
+  addCity,
+  removeCity,
+  selectCity,
+  loadCitiesWeatherInfo
+}

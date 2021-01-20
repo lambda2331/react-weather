@@ -1,13 +1,8 @@
 /// <reference types="react-scripts" />
 
-declare module 'styled-components' {
-  import styled, { ThemeProvider, createGlobalStyle } from 'styled-components'
-  export default styled
-  export { ThemeProvider, createGlobalStyle }
-}
-
 declare module 'redux-watch' {
   import watch from 'redux-watch'
+  import { Watcher } from './types/common'
 
-  export default watch
+  export default watch as (obj: unknown, path: string) => Watcher
 }

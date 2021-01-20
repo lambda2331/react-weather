@@ -1,17 +1,35 @@
+import { WeatherType } from './enum'
+
+export type Watcher = (callback: unknown) => () => void
+
 export type Cities = string[]
 
-export type CitiesWeather = {
-  [key: string]: WeatherInfo
-}
-
+export type CitiesWeather = WeatherInfo[]
 
 export interface WeatherInfo {
   name: string,
   temp: number,
   humidity: number,
   pressure: number,
-  date: Date,
+  date: number,
   wind: number,
   description: string,
-  cod: number
+  id: WeatherType
+}
+
+export interface WeatherInfoDTO {
+  name: string,
+  weather: Array<{ description: string, icon: string }>,
+  main: {
+    humidity: number,
+    temp: number,
+    pressure: number
+  },
+  wind: {
+    speed: number
+  }
+}
+
+export type WeatherIconMapping = {
+  [key: string]: string
 }

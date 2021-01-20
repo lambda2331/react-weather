@@ -1,15 +1,21 @@
-import React from "react";
+import React from 'react'
 
-export function useModal () {
-  const [isOpen, setOpen] = React.useState(false);
+type UseModelHookReturnValue = {
+  isOpen: boolean,
+  openModal: () => void,
+  closeModal: () => void,
+}
+
+export function useModal (): UseModelHookReturnValue {
+  const [isOpen, setOpen] = React.useState(false)
 
   const openModal = () => {
-    setOpen(true);
-  };
+    setOpen(true)
+  }
 
   const closeModal = () => {
-    setOpen(false);
-  };
+    setOpen(false)
+  }
 
   return {
     isOpen,

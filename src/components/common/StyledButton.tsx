@@ -1,6 +1,6 @@
-import React, {ReactNode} from "react";
-import styled from "styled-components";
-import {Fab, Size} from "@material-ui/core";
+import React from 'react'
+import styled from 'styled-components'
+import { Fab, Size } from '@material-ui/core'
 
 const ButtonWrapper = styled(Fab)`
   background-image: linear-gradient(240deg, rgba(0, 0, 200, 0.2), rgba(0, 0, 200, 0));
@@ -13,15 +13,18 @@ const ButtonWrapper = styled(Fab)`
 `
 
 type StyledButtonProps = {
-  children: ReactNode,
+  children: React.ReactChild,
   size: Size,
+  disabled: boolean,
   onClick: (event: React.MouseEvent<HTMLButtonElement>) => void
 }
 
-const StyledButton: React.FC<StyledButtonProps> = ({ children, size, onClick }) => {
-  return <ButtonWrapper size={size} onClick={onClick}>
+const StyledButton: React.FC<StyledButtonProps> = ({
+  children, size, disabled = false, onClick
+}: StyledButtonProps) => (
+  <ButtonWrapper size={size} onClick={onClick} disabled={disabled}>
     { children }
   </ButtonWrapper>
-}
+)
 
 export default StyledButton
